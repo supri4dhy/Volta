@@ -1,10 +1,3 @@
-<!--
- * Manifest File
- * Nama File: index.html
- * Lokasi: /apps/ebike-calc/
- * Fungsi: Aplikasi kalkulator VOLTA dengan animasi bersih, tanpa logo ganda, dan font ramah mobile.
- * Waktu Update: 2026-07-01
--->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -23,70 +16,73 @@
         }
     </script>
     <style>
-        /* Animasi Splash Screen */
         @keyframes splashOut {
-            0% { opacity: 1; visibility: visible; }
-            80% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; pointer-events: none; }
+            0% { opacity: 1; transform: scale(1); visibility: visible; }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none; }
         }
-        .animate-splash { animation: splashOut 0.8s ease-in-out 2s forwards; }
-
-        /* Animasi Konten Muncul */
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        .animate-splash { animation: splashOut 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .app-content { opacity: 0; animation: slideUp 0.6s ease-out 2.2s forwards; }
+        .animate-slide-up { opacity: 0; animation: slideUpFade 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .delay-100 { animation-delay: 2.7s; }
+        .delay-200 { animation-delay: 2.85s; }
+        .delay-300 { animation-delay: 3.0s; }
+        .delay-400 { animation-delay: 3.15s; }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen">
+<body class="bg-slate-100 min-h-screen py-6 px-4">
 
-    <!-- Splash Screen: Logo Tunggal -->
-    <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-emerald-600 animate-splash">
-        <div class="p-6 bg-white rounded-[32px] shadow-2xl mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><path d="m11 10-2 2h4l-2 2"/></svg>
+    <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-700 animate-splash">
+        <div class="p-6 bg-white/10 backdrop-blur-md rounded-[24px] shadow-2xl mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><path d="m11 10-2 2h4l-2 2"/></svg>
         </div>
         <h1 class="text-3xl font-bold text-white tracking-tighter">VOLTA</h1>
     </div>
 
-    <!-- Konten Utama -->
-    <div class="app-content py-8 px-4 max-w-lg mx-auto">
-        <header class="mb-6">
+    <div class="app-content max-w-lg mx-auto space-y-5 animate-slide-up delay-100">
+        <header class="mb-4">
             <h1 class="text-2xl font-bold text-slate-900">Volta App</h1>
-            <p class="text-slate-500 text-sm">Estimasi pengisian baterai cerdas</p>
+            <p class="text-slate-500 text-sm">Estimasi pengisian baterai akurat</p>
         </header>
 
         <form id="calcForm" class="space-y-4">
             <!-- 1. Baterai -->
-            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
+            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200 animate-slide-up delay-200">
                 <label class="block text-xs font-bold text-sky-600 uppercase tracking-wider mb-3">1. Spesifikasi Baterai</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="number" step="0.1" id="bat_volt" placeholder="Volt (V)" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-sky-500">
-                    <input type="number" step="0.1" id="bat_ah" placeholder="Ah" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-sky-500">
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <input type="number" step="0.1" id="bat_volt" placeholder="Volt (V)" required class="w-full text-base p-4 bg-slate-50 border border-slate-200 rounded-[14px] outline-none focus:border-sky-500">
+                    <input type="number" step="0.1" id="bat_ah" placeholder="Ah" required class="w-full text-base p-4 bg-slate-50 border border-slate-200 rounded-[14px] outline-none focus:border-sky-500">
                 </div>
+                <select id="bat_type" class="w-full text-sm p-3 bg-slate-50 border border-slate-200 rounded-[12px]">
+                    <option value="sla">Aki Kering (SLA)</option>
+                    <option value="lithium">Lithium-ion</option>
+                </select>
             </div>
 
             <!-- 2. Charger -->
-            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
+            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200 animate-slide-up delay-300">
                 <label class="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-3">2. Charger</label>
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" step="0.1" id="chg_volt" placeholder="Volt (V)" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-amber-500">
+                    <input type="number" step="0.1" id="chg_volt" placeholder="Volt (V)" required class="w-full text-base p-4 bg-slate-50 border border-slate-200 rounded-[14px] outline-none focus:border-amber-500">
                     <div class="relative">
-                        <input type="number" step="0.1" id="chg_power_val" placeholder="Output" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-amber-500">
-                        <select id="chg_power_unit" class="absolute right-2 top-2 p-1 bg-white border border-slate-200 rounded text-xs font-bold">
-                            <option value="W">W</option>
-                            <option value="A">A</option>
+                        <input type="number" step="0.1" id="chg_power_val" placeholder="Output" required class="w-full text-base p-4 bg-slate-50 border border-slate-200 rounded-[14px] outline-none focus:border-amber-500">
+                        <select id="chg_power_unit" class="absolute right-2 top-2 p-2 bg-white border border-slate-200 rounded-[8px] text-xs font-bold">
+                            <option value="W">Watt</option>
+                            <option value="A">Ampere</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <!-- 3. Status -->
-            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
+            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200 animate-slide-up delay-400">
                 <label class="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-3">3. Status (%)</label>
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" step="1" id="current_pct" placeholder="Sisa %" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-emerald-500">
-                    <input type="number" step="1" id="target_pct" value="100" class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-emerald-500">
+                    <input type="number" step="1" id="current_pct" placeholder="Sisa %" required class="w-full text-base p-4 bg-slate-50 border border-slate-200 rounded-[14px] outline-none focus:border-emerald-500">
+                    <input type="number" step="1" id="target_pct" value="100" class="w-full text-base p-4 bg-slate-50 border border-slate-200 rounded-[14px] outline-none focus:border-emerald-500">
                 </div>
             </div>
 
@@ -95,43 +91,75 @@
             </button>
         </form>
 
-        <div id="liveResult" class="mt-6 bg-slate-900 text-white rounded-[20px] p-6 hidden">
+        <div id="liveResult" class="mt-6 bg-slate-900 text-white rounded-[20px] p-6 hidden shadow-xl">
             <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Waktu Estimasi</p>
             <h2 id="resultTime" class="text-4xl font-bold mt-1">0j 0m</h2>
             <div id="resultAmpWrapper" class="mt-4 pt-4 border-t border-slate-700 text-sm hidden">
                 <p class="text-amber-400 font-bold" id="resultCalcAmp">0 A</p>
             </div>
         </div>
+
+        <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200 mt-6">
+            <h2 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Riwayat</h2>
+            <div id="logTableBody" class="space-y-3"></div>
+        </div>
     </div>
 
     <script>
+        const STORAGE_KEY = 'ebike_logs_v5';
+
         document.getElementById('calcForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const bAh = parseFloat(document.getElementById('bat_ah').value);
-            const bV = parseFloat(document.getElementById('bat_volt').value);
-            const cV = parseFloat(document.getElementById('chg_volt').value);
+            const bType = document.getElementById('bat_type').value;
+            const cVolt = parseFloat(document.getElementById('chg_volt').value);
             const cVal = parseFloat(document.getElementById('chg_power_val').value);
             const cUnit = document.getElementById('chg_power_unit').value;
             const cur = parseFloat(document.getElementById('current_pct').value);
             const tar = parseFloat(document.getElementById('target_pct').value);
 
-            let amp = (cUnit === 'W') ? (cVal / cV) : cVal;
-            const neededAh = bAh * ((tar - cur) / 100);
-            let hours = (neededAh / amp) * 1.2; 
+            let amp = (cUnit === 'W') ? (cVal / cVolt) : cVal;
+            const efficiency = (bType === 'sla') ? 75 : 90;
+            const ahNeeded = bAh * ((tar - cur) / 100);
+            
+            let hours = (ahNeeded / amp) * (100 / efficiency);
+            
+            // Logika fase CV untuk > 80%
+            if (tar > 80) {
+                hours += (bType === 'sla' ? 1.5 : 0.5) * ((tar - Math.max(cur, 80)) / 20);
+            }
 
             document.getElementById('resultTime').innerText = Math.floor(hours) + "j " + Math.round((hours%1)*60) + "m";
             document.getElementById('liveResult').classList.remove('hidden');
+            
             if(cUnit === 'W') {
                 document.getElementById('resultAmpWrapper').classList.remove('hidden');
-                document.getElementById('resultCalcAmp').innerText = amp.toFixed(2) + " Ampere";
+                document.getElementById('resultCalcAmp').innerText = amp.toFixed(2) + " A (Konversi Watt)";
             }
+
+            saveLog(bAh, amp, cur, tar, hours);
         });
-        
-        // Hapus splash dari DOM setelah selesai agar bersih
-        setTimeout(() => {
-            const splash = document.getElementById('splashScreen');
-            if(splash) splash.remove();
-        }, 3000);
+
+        function saveLog(ah, amp, cur, tar, hours) {
+            const logs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            logs.unshift({ ah, amp, cur, tar, hours, date: new Date().toLocaleDateString() });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(logs.slice(0, 5)));
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const logs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const container = document.getElementById('logTableBody');
+            container.innerHTML = logs.map(log => `
+                <div class="flex justify-between items-center text-sm p-3 bg-slate-50 rounded-[12px]">
+                    <span class="font-bold text-slate-700">${log.cur}%-${log.tar}%</span>
+                    <span class="text-emerald-600 font-bold">${Math.floor(log.hours)}j ${Math.round((log.hours%1)*60)}m</span>
+                </div>
+            `).join('');
+        }
+
+        setTimeout(() => { document.getElementById('splashScreen').remove(); }, 3000);
+        renderLogs();
     </script>
 </body>
 </html>
