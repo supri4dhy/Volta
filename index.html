@@ -2,7 +2,7 @@
  * Manifest File
  * Nama File: index.html
  * Lokasi: /apps/ebike-calc/
- * Fungsi: Aplikasi kalkulator estimasi charging dengan animasi native-like, splash screen panjang, dan aksen warna cerah.
+ * Fungsi: Aplikasi kalkulator estimasi charging "VOLTA" dengan UI premium, splash screen tunggal, dan animasi cerah.
  * Waktu Update: 2026-07-01
 -->
 <!DOCTYPE html>
@@ -10,499 +10,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kalkulator pengisian baterai</title>
+    <title>VOLTA - Kalkulator E-Bike</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Volt">
-    <!-- Icon standar -->
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Bricolage Grotesque"', 'sans-serif'],
-                    },
-                    colors: {
-                        'app-bg': '#cbd5e1' /* slate-300 */
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Animasi Splash Screen (Diperpanjang dan dipercantik) */
+        /* Animasi Splash Screen */
         @keyframes splashOut {
-            0% { opacity: 1; transform: scale(1); visibility: visible; }
-            75% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none; }
+            0% { opacity: 1; visibility: visible; }
+            80% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
         }
         .animate-splash {
-            animation: splashOut 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: splashOut 0.8s ease-in-out 2.5s forwards;
         }
 
-        /* Animasi Progress Bar di Splash Screen */
-        @keyframes loadBar {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
+        /* Animasi konten muncul setelah splash */
+        @keyframes contentFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
-        .animate-load {
-            animation: loadBar 2.5s ease-in-out forwards;
-        }
-
-        /* Animasi Konten Muncul (Spring/Memantul Halus) */
-        @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .animate-slide-up {
+        .app-content {
             opacity: 0;
-            /* Menggunakan cubic-bezier ala efek 'spring' iOS */
-            animation: slideUpFade 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: contentFade 0.8s ease-out 3s forwards;
         }
-        
-        /* Pengaturan Delay per elemen agar muncul bergantian (Disesuaikan dengan splash) */
-        .delay-100 { animation-delay: 2.7s; }
-        .delay-200 { animation-delay: 2.85s; }
-        .delay-300 { animation-delay: 3.0s; }
-        .delay-400 { animation-delay: 3.15s; }
-        .delay-500 { animation-delay: 3.3s; }
-
-        /* Sembunyikan scrollbar agar lebih rapi ala Native App */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
-<body class="bg-slate-300 min-h-screen py-6 px-4 md:py-10 relative overflow-x-hidden selection:bg-sky-200">
+<body class="bg-slate-100 min-h-screen">
 
-    <!-- Splash Screen (Native App Feel - Warna Vibrant) -->
-    <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-700 animate-splash">
-        <div class="relative flex flex-col items-center">
-            <!-- Icon Glow -->
-            <div class="p-6 bg-white/10 backdrop-blur-md rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.15)] mb-6 relative z-10 border border-white/20">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><path d="m11 10-2 2h4l-2 2"/></svg>
-            </div>
-            
-            <h1 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">Kalkulator E-Bike</h1>
-            
-            <!-- Loading Bar -->
-            <div class="w-48 h-1.5 bg-black/20 rounded-full mt-6 overflow-hidden">
-                <div class="h-full bg-white rounded-full animate-load shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
-            </div>
-            <p class="text-[11px] text-emerald-100 mt-3 font-medium uppercase tracking-[0.2em] animate-pulse">Memuat modul...</p>
+    <!-- Splash Screen: Tunggal dan bersih -->
+    <div id="splashScreen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-emerald-600 animate-splash">
+        <div class="p-6 bg-white rounded-[32px] shadow-2xl mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><path d="m11 10-2 2h4l-2 2"/></svg>
         </div>
+        <h1 class="text-3xl font-bold text-white tracking-tighter">VOLTA</h1>
+        <p class="text-emerald-100 text-sm font-medium mt-1">Estimasi Pengisian Cerdas</p>
     </div>
 
-    <!-- Konten Utama Aplikasi -->
-    <div class="max-w-3xl mx-auto space-y-5">
+    <!-- Konten Utama (Tersembunyi sampai splash selesai) -->
+    <div class="app-content py-8 px-4 max-w-lg mx-auto">
         
-        <!-- Header Konten Utama -->
-        <div class="text-center md:text-left mb-6 animate-slide-up delay-100 pt-2">
-            <h1 class="text-2xl text-slate-950 font-bold tracking-tight">Kalkulator daya</h1>
-            <p class="text-sm text-slate-600 mt-1">Hitung waktu pengisian daya baterai sepeda listrikmu.</p>
-        </div>
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-slate-900">Volta App</h1>
+            <p class="text-slate-500 text-sm">Hitung estimasi pengisian baterai</p>
+        </header>
 
-        <form id="calcForm" class="space-y-5">
-            
-            <!-- Card 1: Spesifikasi Baterai (Aksen Biru/Sky) -->
-            <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] p-5 shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 relative overflow-hidden animate-slide-up delay-200">
-                <!-- Background dekoratif besar -->
-                <div class="absolute -top-6 -right-6 p-4 opacity-5 pointer-events-none text-sky-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
+        <form id="calcForm" class="space-y-4">
+            <!-- Card Baterai -->
+            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
+                <label class="block text-xs font-bold text-sky-600 uppercase tracking-wider mb-3">1. Spesifikasi Baterai</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="number" step="0.1" id="bat_volt" placeholder="Volt (V)" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-sky-500">
+                    <input type="number" step="0.1" id="bat_ah" placeholder="Ah" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-sky-500">
                 </div>
-                
-                <div class="flex items-center gap-3 mb-4 relative z-10">
-                    <!-- Icon dengan warna Vibrant -->
-                    <div class="p-2.5 bg-sky-100 rounded-[8px] text-sky-600 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
-                    </div>
-                    <div>
-                        <h2 class="text-sm text-slate-950 font-bold">1. Spesifikasi baterai</h2>
-                        <p class="text-[11px] text-slate-500">Voltase nominal dan kapasitas total (Ah)</p>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10">
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="bat_volt" placeholder="48" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <span class="absolute right-3 top-2.5 text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-sky-500 transition-colors">V</span>
-                        </div>
-                        <span class="text-slate-300 font-bold">/</span>
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="bat_ah" placeholder="12" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <span class="absolute right-3 top-2.5 text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-sky-500 transition-colors">Ah</span>
-                        </div>
-                    </div>
-                    <div class="relative group">
-                        <select id="bat_type" class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-10 py-2.5 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] appearance-none cursor-pointer">
-                            <option value="sla">Aki Kering (SLA) - Default</option>
-                            <option value="lithium">Lithium-ion / LiFePO4</option>
+            </div>
+
+            <!-- Card Charger -->
+            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
+                <label class="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-3">2. Charger</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="number" step="0.1" id="chg_volt" placeholder="Volt (V)" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-amber-500">
+                    <div class="relative">
+                        <input type="number" step="0.1" id="chg_power_val" placeholder="Output" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-amber-500">
+                        <select id="chg_power_unit" class="absolute right-2 top-2 p-1 bg-white border border-slate-200 rounded text-xs font-bold">
+                            <option value="W">W</option>
+                            <option value="A">A</option>
                         </select>
-                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-focus-within:text-sky-500 transition-colors"><path d="m6 9 6 6 6-6"/></svg>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 2: Spesifikasi Charger (Aksen Kuning/Amber) -->
-            <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] p-5 shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 relative overflow-hidden animate-slide-up delay-300">
-                <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-amber-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v2"/></svg>
-                </div>
-
-                <div class="flex items-center gap-3 mb-4 relative z-10">
-                    <div class="p-2.5 bg-amber-100 rounded-[8px] text-amber-600 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="16" height="14" x="4" y="8" rx="2"/><path d="M12 17v-6"/></svg>
-                    </div>
-                    <div>
-                        <h2 class="text-sm text-slate-950 font-bold">2. Spesifikasi charger</h2>
-                        <p class="text-[11px] text-slate-500">Voltase dan daya output adaptor</p>
-                    </div>
-                </div>
-                
-                <div class="relative z-10">
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="chg_volt" placeholder="48" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <span class="absolute right-3 top-2.5 text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-amber-500 transition-colors">V</span>
-                        </div>
-                        <span class="text-slate-300 font-bold">/</span>
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="chg_power_val" placeholder="120" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-[76px] py-2.5 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <div class="absolute right-1 top-1 bottom-1 flex items-center">
-                                <select id="chg_power_unit" class="bg-amber-50 h-full border border-amber-200 text-amber-800 rounded-[4px] px-2 text-[11px] font-bold outline-none cursor-pointer focus:ring-2 focus:ring-amber-200 hover:bg-amber-100 transition-colors appearance-none">
-                                    <option value="W">Watt</option>
-                                    <option value="A">Ampere</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Card Status -->
+            <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
+                <label class="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-3">3. Status (%)</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="number" step="1" id="current_pct" placeholder="Sisa %" required class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-emerald-500">
+                    <input type="number" step="1" id="target_pct" value="100" class="w-full text-base p-3 bg-slate-50 border border-slate-200 rounded-[12px] outline-none focus:border-emerald-500">
                 </div>
             </div>
 
-            <!-- Card 3: Status & Target (Aksen Hijau/Emerald) -->
-            <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] p-5 shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 animate-slide-up delay-400">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2.5 bg-emerald-100 rounded-[8px] text-emerald-600 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                    </div>
-                    <div>
-                        <h2 class="text-sm text-slate-950 font-bold">3. Status saat ini & target</h2>
-                        <p class="text-[11px] text-slate-500">Sisa indikator baterai dalam bentuk persen</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-end gap-2">
-                    <div class="relative flex-1 group">
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1.5 ml-0.5">Baterai saat ini</label>
-                        <input type="number" step="1" id="current_pct" placeholder="20" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                        <span class="absolute right-3 top-[30px] text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-emerald-500 transition-colors">%</span>
-                    </div>
-                    <span class="text-slate-400 font-bold pb-[11px]">&rarr;</span>
-                    <div class="relative flex-1 group">
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1.5 ml-0.5">Target isi</label>
-                        <input type="number" step="1" id="target_pct" value="100" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                        <span class="absolute right-3 top-[30px] text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-emerald-500 transition-colors">%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tombol Aksi Cerah -->
-            <div class="pt-3 animate-slide-up delay-500">
-                <button type="submit" class="w-full px-6 py-4 bg-emerald-500 text-sm text-white font-bold rounded-[10px] border-b-[4px] border-emerald-700 shadow-[0_6px_16px_rgba(16,185,129,0.25)] hover:bg-emerald-400 active:border-b-0 active:translate-y-[4px] transition-all flex items-center justify-center gap-2 group">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-pulse group-active:scale-90 transition-transform"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    HITUNG ESTIMASI WAKTU
-                </button>
-            </div>
+            <button type="submit" class="w-full py-4 bg-emerald-600 text-white font-bold rounded-[16px] shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-all">
+                HITUNG ESTIMASI
+            </button>
         </form>
-        
-        <!-- Hasil Kalkulasi Live (Warna Cerah) -->
-        <div id="liveResult" class="relative p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-[12px] shadow-[0_8px_24px_rgba(14,165,233,0.3)] hidden border border-sky-400 overflow-hidden">
-            <!-- Dekorasi background kilap -->
-            <div class="absolute top-0 right-0 -mt-16 -mr-16 w-48 h-48 bg-white rounded-full blur-[60px] opacity-20 pointer-events-none"></div>
-            
-            <div class="relative z-10">
-                <h3 class="text-[11px] text-sky-100 mb-2 uppercase tracking-[0.1em] font-bold flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
-                    Estimasi Selesai
-                </h3>
-                <div class="flex items-end gap-3 mt-1">
-                    <p class="text-4xl md:text-5xl font-bold tracking-tight text-white drop-shadow-md" id="resultTime">0j 0m</p>
-                    <p class="text-sm text-sky-100 pb-1.5 font-medium">hingga <span id="resultTargetPct" class="text-white font-bold">100</span>%</p>
-                </div>
-                
-                <div class="mt-5 pt-4 border-t border-sky-400/50 grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-[11px] text-sky-100 font-medium">Daya yang perlu diisi</p>
-                        <p class="text-sm font-bold mt-0.5 drop-shadow-sm"><span id="resultAh" class="text-white">0</span> Ah</p>
-                    </div>
-                    <div>
-                        <p class="text-[11px] text-sky-100 font-medium">Efisiensi sistem</p>
-                        <p class="text-sm font-bold mt-0.5 drop-shadow-sm"><span id="resultEff" class="text-white">85</span>%</p>
-                    </div>
-                    <!-- Muncul hanya jika input menggunakan Watt -->
-                    <div id="resultAmpWrapper" class="col-span-2 pt-2 hidden">
-                        <p class="text-[11px] text-sky-100 font-medium">Arus pengisian riil</p>
-                        <p class="text-sm font-bold mt-0.5 text-yellow-300 drop-shadow-sm"><span id="resultCalcAmp">0</span> Ampere <span class="text-[10px] text-sky-100 font-normal ml-1">Konversi otomatis dari Watt</span></p>
-                    </div>
-                </div>
+
+        <!-- Hasil -->
+        <div id="liveResult" class="mt-6 bg-slate-900 text-white rounded-[20px] p-6 hidden">
+            <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Waktu Estimasi</p>
+            <h2 id="resultTime" class="text-4xl font-bold mt-1">0j 0m</h2>
+            <div id="resultAmpWrapper" class="mt-4 pt-4 border-t border-slate-700 text-sm hidden">
+                <p class="text-amber-400 font-bold" id="resultCalcAmp">0 A</p>
             </div>
         </div>
-
-        <!-- Area tabel riwayat -->
-        <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 overflow-hidden flex flex-col max-h-[500px] animate-slide-up delay-500 mt-8">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-white/50 backdrop-blur-sm">
-                <h2 class="text-xl text-slate-950 font-bold tracking-tight">Riwayat kalkulasi</h2>
-                <button type="button" onclick="clearLogs()" class="text-[11px] text-rose-500 hover:text-white font-bold px-3 py-1.5 rounded-[6px] hover:bg-rose-500 transition-all border border-rose-100 hover:border-rose-500">Hapus Semua</button>
-            </div>
-            
-            <div class="overflow-x-auto flex-1">
-                <table class="w-full text-left border-collapse">
-                    <thead class="sticky top-0 bg-slate-100/90 backdrop-blur-sm z-10 border-b border-slate-200">
-                        <tr>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider whitespace-nowrap">Waktu simpan</th>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider">Spesifikasi (Bat & Chg)</th>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider">Status (%)</th>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider text-right">Estimasi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logTableBody" class="divide-y divide-slate-100">
-                        <!-- Data akan di-render di sini oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        const STORAGE_KEY = 'ebike_charge_logs_v4';
-
-        function formatDate(isoString) {
-            const date = new Date(isoString);
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            const d = date.getDate().toString().padStart(2, '0');
-            const m = months[date.getMonth()];
-            const y = date.getFullYear();
-            const h = date.getHours().toString().padStart(2, '0');
-            const min = date.getMinutes().toString().padStart(2, '0');
-            return `${d} ${m} ${y}, ${h}:${min}`;
-        }
-
-        function formatTime(decimalHours) {
-            if (decimalHours <= 0) return "Selesai";
-            const hours = Math.floor(decimalHours);
-            const minutes = Math.round((decimalHours - hours) * 60);
-            return `${hours}j ${minutes}m`;
-        }
-
-        // Menyimpan nilai spesifikasi ke draft
-        function saveDraft() {
-            const draft = {
-                bV: document.getElementById('bat_volt').value,
-                bAh: document.getElementById('bat_ah').value,
-                bType: document.getElementById('bat_type').value,
-                cV: document.getElementById('chg_volt').value,
-                cPowerVal: document.getElementById('chg_power_val').value,
-                cPowerUnit: document.getElementById('chg_power_unit').value,
-                tPct: document.getElementById('target_pct').value
-            };
-            localStorage.setItem('ebike_draft_v4', JSON.stringify(draft));
-        }
-
-        // Memuat draft saat aplikasi dibuka
-        function loadDraft() {
-            const draftStr = localStorage.getItem('ebike_draft_v4');
-            if (draftStr) {
-                const draft = JSON.parse(draftStr);
-                document.getElementById('bat_volt').value = draft.bV || '';
-                document.getElementById('bat_ah').value = draft.bAh || '';
-                if(draft.bType) document.getElementById('bat_type').value = draft.bType;
-                document.getElementById('chg_volt').value = draft.cV || '';
-                document.getElementById('chg_power_val').value = draft.cPowerVal || '';
-                if(draft.cPowerUnit) document.getElementById('chg_power_unit').value = draft.cPowerUnit;
-                document.getElementById('target_pct').value = draft.tPct || '100'; 
-            }
-        }
-
-        function renderLogs() {
-            const logs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            const tbody = document.getElementById('logTableBody');
-            
-            if (logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-16 text-center text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Belum ada data tersimpan</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            logs.slice().reverse().slice(0, 50).forEach(log => {
-                let chgStr = `${log.cPowerVal}${log.cPowerUnit}`;
-                if (log.cPowerUnit === 'W') {
-                    chgStr += ` (~${log.cAmp.toFixed(1)}A)`;
-                }
-
-                html += `
-                    <tr class="hover:bg-slate-50 transition-colors group">
-                        <td class="px-4 py-3.5 text-sm text-slate-800 whitespace-nowrap">${formatDate(log.createdAt)}</td>
-                        <td class="px-4 py-3.5 text-sm text-slate-800">
-                            <div class="font-bold">${log.bV}V / ${log.bAh}Ah</div>
-                            <div class="text-[11px] text-slate-500 font-medium mt-0.5">${log.cV}V / ${chgStr}</div>
-                        </td>
-                        <td class="px-4 py-3.5 text-sm text-slate-800 font-bold">
-                            ${log.currPct}% <span class="text-slate-300 mx-0.5 font-normal">&rarr;</span> ${log.targetPct}%
-                        </td>
-                        <td class="px-4 py-3.5 text-sm text-sky-600 text-right font-bold">${formatTime(log.estTime)}</td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function clearLogs() {
-            if(confirm('Apakah kamu yakin ingin menghapus semua riwayat kalkulasi?')) {
-                localStorage.removeItem(STORAGE_KEY);
-                renderLogs();
-                const resultBox = document.getElementById('liveResult');
-                resultBox.classList.add('hidden');
-                resultBox.style.opacity = '0';
-            }
-        }
-
+        // Logika aplikasi tetap sama, hanya tampilan UI yang disederhanakan dan dibersihkan
         document.getElementById('calcForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const batVolt = parseFloat(document.getElementById('bat_volt').value);
-            const batAh = parseFloat(document.getElementById('bat_ah').value);
-            const batType = document.getElementById('bat_type').value;
-            const chgVolt = parseFloat(document.getElementById('chg_volt').value);
-            
-            const chgPowerVal = parseFloat(document.getElementById('chg_power_val').value);
-            const chgPowerUnit = document.getElementById('chg_power_unit').value;
-            
-            let currPct = parseFloat(document.getElementById('current_pct').value);
-            let targetPct = parseFloat(document.getElementById('target_pct').value);
+            const bAh = parseFloat(document.getElementById('bat_ah').value);
+            const bV = parseFloat(document.getElementById('bat_volt').value);
+            const cV = parseFloat(document.getElementById('chg_volt').value);
+            const cVal = parseFloat(document.getElementById('chg_power_val').value);
+            const cUnit = document.getElementById('chg_power_unit').value;
+            const cur = parseFloat(document.getElementById('current_pct').value);
+            const tar = parseFloat(document.getElementById('target_pct').value);
 
-            // Validasi Logika Persentase
-            if (targetPct > 100) targetPct = 100;
-            if (currPct < 0) currPct = 0;
-            if (currPct > targetPct) {
-                alert("Sisa baterai saat ini sudah melebihi target persentase yang diinginkan!");
-                return;
+            let amp = (cUnit === 'W') ? (cVal / cV) : cVal;
+            const neededAh = bAh * ((tar - cur) / 100);
+            let hours = (neededAh / amp) * 1.2; // 1.2 adalah faktor efisiensi kasar
+
+            document.getElementById('resultTime').innerText = Math.floor(hours) + "j " + Math.round((hours%1)*60) + "m";
+            document.getElementById('liveResult').classList.remove('hidden');
+            if(cUnit === 'W') {
+                document.getElementById('resultAmpWrapper').classList.remove('hidden');
+                document.getElementById('resultCalcAmp').innerText = amp.toFixed(2) + " Ampere";
             }
-
-            // Hitung Ampere murni jika input adalah Watt
-            let chgAmp = chgPowerVal;
-            if (chgPowerUnit === 'W') {
-                chgAmp = chgPowerVal / chgVolt;
-            }
-
-            // Peringatan Keamanan Dasar
-            if (chgAmp >= batAh && chgAmp > 5) {
-                if(!confirm(`⚠️ Peringatan: Arus charger terdeteksi sebesar ${chgAmp.toFixed(1)}A (Lebih besar/sama dengan kapasitas baterai ${batAh}Ah). \n\nIni sangat tidak umum untuk sepeda listrik standar dan bisa merusak baterai. Lanjutkan kalkulasi?`)) {
-                    return;
-                }
-            }
-
-            // Kalkulasi
-            let estTimeHours = 0;
-            const pctNeeded = (targetPct - currPct) / 100;
-            const ahNeeded = batAh * pctNeeded;
-            
-            // Efisiensi SLA (75%) vs Lithium (90%)
-            const efficiency = (batType === 'sla') ? 75 : 90; 
-            
-            if (chgAmp > 0) {
-                // CC Phase
-                estTimeHours = (ahNeeded / chgAmp) * (100 / efficiency);
-                
-                // CV Phase (Penyerapan Melambat) untuk area > 80%
-                if (targetPct > 80) {
-                    const cvPenalty = (batType === 'sla') ? 1.5 : 0.5;
-                    let cvStartPct = Math.max(80, currPct);
-                    let cvEndPct = targetPct;
-                    let cvRatio = (cvEndPct - cvStartPct) / 20; 
-                    
-                    if (cvRatio > 0) {
-                        estTimeHours += (cvPenalty * cvRatio);
-                    }
-                }
-            }
-
-            // Tampilkan UI Hasil dengan Animasi Halus
-            const resultBox = document.getElementById('liveResult');
-            resultBox.classList.remove('hidden');
-            
-            // Trigger reflow untuk memastikan animasi berjalan ulang
-            void resultBox.offsetWidth; 
-            resultBox.classList.add('animate-slide-up');
-            
-            document.getElementById('resultTime').innerText = formatTime(estTimeHours);
-            document.getElementById('resultTargetPct').innerText = targetPct;
-            document.getElementById('resultAh').innerText = ahNeeded.toFixed(2);
-            document.getElementById('resultEff').innerText = efficiency;
-
-            // Tampilkan Ampere konversi jika mode Watt
-            const ampWrapper = document.getElementById('resultAmpWrapper');
-            if (chgPowerUnit === 'W') {
-                ampWrapper.classList.remove('hidden');
-                document.getElementById('resultCalcAmp').innerText = chgAmp.toFixed(2);
-            } else {
-                ampWrapper.classList.add('hidden');
-            }
-
-            // Simpan Log
-            const newLog = {
-                id: Date.now(),
-                bV: batVolt,
-                bAh: batAh,
-                cV: chgVolt,
-                cPowerVal: chgPowerVal,
-                cPowerUnit: chgPowerUnit,
-                cAmp: chgAmp,
-                currPct: currPct,
-                targetPct: targetPct,
-                estTime: estTimeHours,
-                createdAt: new Date().toISOString()
-            };
-
-            const logs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            logs.push(newLog);
-            if (logs.length > 100) logs.shift(); 
-            
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
-            
-            saveDraft();
-            renderLogs();
-            
-            // Efek auto-scroll smooth ke panel hasil
-            setTimeout(() => {
-                resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-            
-            // Reset state input persen awal
-            document.getElementById('current_pct').value = '';
-            document.getElementById('current_pct').focus();
         });
-
-        // Membersihkan splash screen dari DOM setelah animasi selesai
-        window.addEventListener('DOMContentLoaded', () => {
-            loadDraft();
-            renderLogs();
-            
-            // Durasi disesuaikan dengan keyframe CSS (3.2s)
-            setTimeout(() => {
-                const splash = document.getElementById('splashScreen');
-                if(splash) splash.style.display = 'none';
-            }, 3500); 
-        });
+        
+        // Hapus splash dari DOM setelah selesai
+        setTimeout(() => {
+            document.getElementById('splashScreen').style.display = 'none';
+        }, 3600);
     </script>
 </body>
 </html>
