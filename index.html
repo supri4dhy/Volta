@@ -2,7 +2,7 @@
  * Manifest File
  * Nama File: index.html
  * Lokasi: /apps/ebike-calc/
- * Fungsi: Aplikasi kalkulator estimasi charging "VOLTA" dengan UI premium, splash screen tunggal, dan animasi cerah.
+ * Fungsi: Aplikasi kalkulator VOLTA dengan animasi bersih, tanpa logo ganda, dan font ramah mobile.
  * Waktu Update: 2026-07-01
 -->
 <!DOCTYPE html>
@@ -13,49 +13,51 @@
     <title>VOLTA - Kalkulator E-Bike</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Bricolage Grotesque"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
     <style>
         /* Animasi Splash Screen */
         @keyframes splashOut {
             0% { opacity: 1; visibility: visible; }
             80% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
+            100% { opacity: 0; visibility: hidden; pointer-events: none; }
         }
-        .animate-splash {
-            animation: splashOut 0.8s ease-in-out 2.5s forwards;
-        }
+        .animate-splash { animation: splashOut 0.8s ease-in-out 2s forwards; }
 
-        /* Animasi konten muncul setelah splash */
-        @keyframes contentFade {
+        /* Animasi Konten Muncul */
+        @keyframes slideUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        .app-content {
-            opacity: 0;
-            animation: contentFade 0.8s ease-out 3s forwards;
-        }
+        .app-content { opacity: 0; animation: slideUp 0.6s ease-out 2.2s forwards; }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen">
 
-    <!-- Splash Screen: Tunggal dan bersih -->
-    <div id="splashScreen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-emerald-600 animate-splash">
+    <!-- Splash Screen: Logo Tunggal -->
+    <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-emerald-600 animate-splash">
         <div class="p-6 bg-white rounded-[32px] shadow-2xl mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><path d="m11 10-2 2h4l-2 2"/></svg>
         </div>
         <h1 class="text-3xl font-bold text-white tracking-tighter">VOLTA</h1>
-        <p class="text-emerald-100 text-sm font-medium mt-1">Estimasi Pengisian Cerdas</p>
     </div>
 
-    <!-- Konten Utama (Tersembunyi sampai splash selesai) -->
+    <!-- Konten Utama -->
     <div class="app-content py-8 px-4 max-w-lg mx-auto">
-        
-        <header class="mb-8">
+        <header class="mb-6">
             <h1 class="text-2xl font-bold text-slate-900">Volta App</h1>
-            <p class="text-slate-500 text-sm">Hitung estimasi pengisian baterai</p>
+            <p class="text-slate-500 text-sm">Estimasi pengisian baterai cerdas</p>
         </header>
 
         <form id="calcForm" class="space-y-4">
-            <!-- Card Baterai -->
+            <!-- 1. Baterai -->
             <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
                 <label class="block text-xs font-bold text-sky-600 uppercase tracking-wider mb-3">1. Spesifikasi Baterai</label>
                 <div class="grid grid-cols-2 gap-3">
@@ -64,7 +66,7 @@
                 </div>
             </div>
 
-            <!-- Card Charger -->
+            <!-- 2. Charger -->
             <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
                 <label class="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-3">2. Charger</label>
                 <div class="grid grid-cols-2 gap-3">
@@ -79,7 +81,7 @@
                 </div>
             </div>
 
-            <!-- Card Status -->
+            <!-- 3. Status -->
             <div class="bg-white rounded-[20px] p-5 shadow-sm border border-slate-200">
                 <label class="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-3">3. Status (%)</label>
                 <div class="grid grid-cols-2 gap-3">
@@ -93,7 +95,6 @@
             </button>
         </form>
 
-        <!-- Hasil -->
         <div id="liveResult" class="mt-6 bg-slate-900 text-white rounded-[20px] p-6 hidden">
             <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Waktu Estimasi</p>
             <h2 id="resultTime" class="text-4xl font-bold mt-1">0j 0m</h2>
@@ -104,7 +105,6 @@
     </div>
 
     <script>
-        // Logika aplikasi tetap sama, hanya tampilan UI yang disederhanakan dan dibersihkan
         document.getElementById('calcForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const bAh = parseFloat(document.getElementById('bat_ah').value);
@@ -117,7 +117,7 @@
 
             let amp = (cUnit === 'W') ? (cVal / cV) : cVal;
             const neededAh = bAh * ((tar - cur) / 100);
-            let hours = (neededAh / amp) * 1.2; // 1.2 adalah faktor efisiensi kasar
+            let hours = (neededAh / amp) * 1.2; 
 
             document.getElementById('resultTime').innerText = Math.floor(hours) + "j " + Math.round((hours%1)*60) + "m";
             document.getElementById('liveResult').classList.remove('hidden');
@@ -127,10 +127,11 @@
             }
         });
         
-        // Hapus splash dari DOM setelah selesai
+        // Hapus splash dari DOM setelah selesai agar bersih
         setTimeout(() => {
-            document.getElementById('splashScreen').style.display = 'none';
-        }, 3600);
+            const splash = document.getElementById('splashScreen');
+            if(splash) splash.remove();
+        }, 3000);
     </script>
 </body>
 </html>
