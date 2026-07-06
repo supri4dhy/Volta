@@ -3,13 +3,13 @@
  * Nama File: index.html
  * Lokasi: /apps/ebike-calc/
  * Fungsi: Aplikasi kalkulator VOLTA dengan animasi native-like, splash screen panjang, aksen warna cerah, dan logika CC/CV.
- * Waktu Update: 2026-07-02
+ * Waktu Update: 2026-07-06
 -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>VOLTA - Kalkulator E-Bike</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
@@ -30,7 +30,7 @@
                         sans: ['"Bricolage Grotesque"', 'sans-serif'],
                     },
                     colors: {
-                        'app-bg': '#cbd5e1' /* slate-300 */
+                        'app-bg': '#cbd5e1'
                     }
                 }
             }
@@ -38,7 +38,7 @@
     </script>
     
     <style>
-        /* Animasi Splash Screen (Diperpanjang dan dipercantik) */
+        /* Animasi Splash Screen */
         @keyframes splashOut {
             0% { opacity: 1; transform: scale(1); visibility: visible; }
             75% { opacity: 1; transform: scale(1); }
@@ -58,44 +58,34 @@
             animation: loadBar 2.5s ease-in-out forwards;
         }
 
-        /* Animasi Konten Muncul (Spring/Memantul Halus) */
+        /* Animasi Konten Muncul */
         @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .animate-slide-up {
             opacity: 0;
-            /* Menggunakan cubic-bezier ala efek 'spring' iOS */
-            animation: slideUpFade 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: slideUpFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
         
-        /* Pengaturan Delay per elemen agar muncul bergantian (Disesuaikan dengan splash) */
         .delay-100 { animation-delay: 2.7s; }
-        .delay-200 { animation-delay: 2.85s; }
-        .delay-300 { animation-delay: 3.0s; }
-        .delay-400 { animation-delay: 3.15s; }
-        .delay-500 { animation-delay: 3.3s; }
 
         /* Sembunyikan scrollbar agar lebih rapi ala Native App */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        ::-webkit-scrollbar { width: 0px; height: 0px; display: none; }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
     </style>
 </head>
-<body class="bg-slate-300 min-h-screen py-6 px-4 md:py-10 relative overflow-x-hidden selection:bg-sky-200">
+<body class="bg-slate-100 min-h-screen relative overflow-x-hidden selection:bg-sky-200">
 
-    <!-- Splash Screen (Native App Feel - Warna Vibrant) -->
-    <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-700 animate-splash">
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-700 animate-splash">
         <div class="relative flex flex-col items-center">
-            <!-- Icon Glow -->
-            <div class="p-6 bg-white/10 backdrop-blur-md rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.15)] mb-6 relative z-10 border border-white/20">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><path d="m11 10-2 2h4l-2 2"/></svg>
+            <div class="p-2 bg-white/10 backdrop-blur-md rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.15)] mb-6 relative z-10 border border-white/20">
+                <img src="icon-192.png" alt="Volta Icon" width="96" height="96" class="animate-pulse rounded-[16px] drop-shadow-lg">
             </div>
             
             <h1 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">VOLTA</h1>
             
-            <!-- Loading Bar -->
             <div class="w-48 h-1.5 bg-black/20 rounded-full mt-6 overflow-hidden">
                 <div class="h-full bg-white rounded-full animate-load shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
             </div>
@@ -103,209 +93,280 @@
         </div>
     </div>
 
-    <!-- Konten Utama Aplikasi -->
-    <div class="max-w-3xl mx-auto space-y-5">
-        
-        <!-- Header Konten Utama -->
-        <div class="text-center md:text-left mb-6 animate-slide-up delay-100 pt-2">
-            <h1 class="text-2xl text-slate-950 font-bold tracking-tight">Kalkulator VOLTA</h1>
-            <p class="text-sm text-slate-600 mt-1">Hitung waktu presisi pengisian baterai sepeda listrikmu.</p>
-        </div>
+    <!-- Header App Fixed -->
+    <div class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 px-5 py-4 shadow-sm">
+        <h1 class="text-xl text-slate-950 font-bold tracking-tight">Kalkulator VOLTA</h1>
+        <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wider mt-0.5">Estimasi Pengecasan</p>
+    </div>
 
-        <form id="calcForm" class="space-y-5">
+    <!-- Konten Utama Aplikasi (Container) -->
+    <div class="max-w-md mx-auto w-full px-4 pt-5 pb-28">
+        <form id="calcForm" class="block">
             
-            <!-- Card 1: Spesifikasi Baterai (Aksen Biru/Sky) -->
-            <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] p-5 shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 relative overflow-hidden animate-slide-up delay-200">
-                <!-- Background dekoratif besar -->
-                <div class="absolute -top-6 -right-6 p-4 opacity-5 pointer-events-none text-sky-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
-                </div>
-                
-                <div class="flex items-center gap-3 mb-4 relative z-10">
-                    <!-- Icon dengan warna Vibrant -->
-                    <div class="p-2.5 bg-sky-100 rounded-[8px] text-sky-600 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
+            <!-- TAB DATA (Baterai & Charger) -->
+            <div id="tab-data" class="tab-content animate-slide-up delay-100 space-y-5">
+                <!-- Spesifikasi Baterai -->
+                <div class="bg-gradient-to-br from-white to-slate-50 rounded-[12px] p-5 shadow-sm border border-slate-200 relative overflow-hidden">
+                    <div class="absolute -top-6 -right-6 p-4 opacity-5 pointer-events-none text-sky-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
                     </div>
-                    <div>
-                        <h2 class="text-sm text-slate-950 font-bold">1. Spesifikasi baterai</h2>
-                        <p class="text-[11px] text-slate-500">Voltase nominal dan kapasitas total (Ah)</p>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10">
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="bat_volt" placeholder="48" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <span class="absolute right-3 top-2.5 text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-sky-500 transition-colors">V</span>
+                    
+                    <div class="flex items-center gap-3 mb-5 relative z-10">
+                        <div class="p-2.5 bg-sky-100 rounded-[8px] text-sky-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
                         </div>
-                        <span class="text-slate-300 font-bold">/</span>
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="bat_ah" placeholder="12" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <span class="absolute right-3 top-2.5 text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-sky-500 transition-colors">Ah</span>
+                        <div>
+                            <h2 class="text-base text-slate-950 font-bold">1. Spesifikasi baterai</h2>
+                            <p class="text-[11px] text-slate-500">Voltase nominal & kapasitas</p>
                         </div>
                     </div>
-                    <div class="relative group">
-                        <select id="bat_type" class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-10 py-2.5 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] appearance-none cursor-pointer">
-                            <option value="sla">Aki Kering (SLA) - Default</option>
-                            <option value="lithium">Lithium-ion / LiFePO4</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-focus-within:text-sky-500 transition-colors"><path d="m6 9 6 6 6-6"/></svg>
+                    
+                    <div class="space-y-4 relative z-10">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="relative group">
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Voltase</label>
+                                <input type="number" step="0.1" id="bat_volt" placeholder="48" required class="w-full text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-[8px] pl-3 pr-8 py-3 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all">
+                                <span class="absolute right-3 top-[34px] text-sm text-slate-400 font-bold pointer-events-none">V</span>
+                            </div>
+                            <div class="relative group">
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Kapasitas</label>
+                                <input type="number" step="0.1" id="bat_ah" placeholder="12" required class="w-full text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-[8px] pl-3 pr-8 py-3 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all">
+                                <span class="absolute right-3 top-[34px] text-sm text-slate-400 font-bold pointer-events-none">Ah</span>
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Tipe Baterai</label>
+                            <select id="bat_type" class="w-full text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-[8px] pl-3 pr-10 py-3 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-50 transition-all appearance-none cursor-pointer">
+                                <option value="sla">Aki Kering (SLA) - Default</option>
+                                <option value="lithium">Lithium-ion / LiFePO4</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-3 top-[24px] flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Card 2: Spesifikasi Charger (Aksen Kuning/Amber) -->
-            <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] p-5 shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 relative overflow-hidden animate-slide-up delay-300">
-                <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-amber-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v2"/></svg>
                 </div>
 
-                <div class="flex items-center gap-3 mb-4 relative z-10">
-                    <div class="p-2.5 bg-amber-100 rounded-[8px] text-amber-600 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="16" height="14" x="4" y="8" rx="2"/><path d="M12 17v-6"/></svg>
+                <!-- Spesifikasi Charger -->
+                <div class="bg-gradient-to-br from-white to-slate-50 rounded-[12px] p-5 shadow-sm border border-slate-200 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-amber-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v2"/></svg>
                     </div>
-                    <div>
-                        <h2 class="text-sm text-slate-950 font-bold">2. Spesifikasi charger</h2>
-                        <p class="text-[11px] text-slate-500">Voltase dan daya output adaptor</p>
-                    </div>
-                </div>
-                
-                <div class="relative z-10">
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="chg_volt" placeholder="48" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <span class="absolute right-3 top-2.5 text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-amber-500 transition-colors">V</span>
+
+                    <div class="flex items-center gap-3 mb-5 relative z-10">
+                        <div class="p-2.5 bg-amber-100 rounded-[8px] text-amber-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="16" height="14" x="4" y="8" rx="2"/><path d="M12 17v-6"/></svg>
                         </div>
-                        <span class="text-slate-300 font-bold">/</span>
-                        <div class="relative flex-1 group">
-                            <input type="number" step="0.1" id="chg_power_val" placeholder="120" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-[76px] py-2.5 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                            <div class="absolute right-1 top-1 bottom-1 flex items-center">
-                                <select id="chg_power_unit" class="bg-amber-50 h-full border border-amber-200 text-amber-800 rounded-[4px] px-2 text-[11px] font-bold outline-none cursor-pointer focus:ring-2 focus:ring-amber-200 hover:bg-amber-100 transition-colors appearance-none">
+                        <div>
+                            <h2 class="text-base text-slate-950 font-bold">2. Spesifikasi charger</h2>
+                            <p class="text-[11px] text-slate-500">Voltase dan daya output adaptor</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 relative z-10">
+                        <div class="relative group">
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Voltase Charger</label>
+                            <input type="number" step="0.1" id="chg_volt" placeholder="48" required class="w-full text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-[8px] pl-3 pr-8 py-3 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-50 transition-all">
+                            <span class="absolute right-3 top-[34px] text-sm text-slate-400 font-bold pointer-events-none">V</span>
+                        </div>
+                        <div class="relative group">
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Daya / Arus Output</label>
+                            <div class="flex">
+                                <input type="number" step="0.1" id="chg_power_val" placeholder="120" required class="flex-1 text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-l-[8px] pl-3 py-3 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-50 transition-all z-10">
+                                <select id="chg_power_unit" class="w-24 bg-amber-50 border border-slate-200 border-l-0 text-amber-800 rounded-r-[8px] px-3 text-sm font-bold outline-none cursor-pointer focus:ring-2 focus:ring-amber-200 hover:bg-amber-100 transition-colors appearance-none">
                                     <option value="W">Watt</option>
-                                    <option value="A">Ampere</option>
+                                    <option value="A">Amp</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <button type="button" onclick="switchTab('tab-status')" class="mt-4 w-full px-4 py-4 bg-emerald-500 text-white font-bold rounded-[10px] hover:bg-emerald-400 transition-all shadow-[0_4px_12px_rgba(16,185,129,0.3)]">Beralih ke Menu Hitung &rarr;</button>
             </div>
 
-            <!-- Card 3: Status & Target (Aksen Hijau/Emerald) -->
-            <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] p-5 shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 animate-slide-up delay-400">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2.5 bg-emerald-100 rounded-[8px] text-emerald-600 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+            <!-- TAB STATUS & HITUNG -->
+            <div id="tab-status" class="tab-content hidden animate-slide-up">
+                <div class="bg-gradient-to-br from-white to-slate-50 rounded-[12px] p-5 shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="p-2.5 bg-emerald-100 rounded-[8px] text-emerald-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-base text-slate-950 font-bold">3. Status saat ini & target</h2>
+                            <p class="text-[11px] text-slate-500">Sisa kapasitas baterai</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-sm text-slate-950 font-bold">3. Status saat ini & target</h2>
-                        <p class="text-[11px] text-slate-500">Sisa indikator baterai dalam bentuk persen</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-end gap-2">
-                    <div class="relative flex-1 group">
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1.5 ml-0.5">Baterai saat ini</label>
-                        <input type="number" step="1" id="current_pct" placeholder="20" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                        <span class="absolute right-3 top-[30px] text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-emerald-500 transition-colors">%</span>
-                    </div>
-                    <span class="text-slate-400 font-bold pb-[11px]">&rarr;</span>
-                    <div class="relative flex-1 group">
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1.5 ml-0.5">Target isi</label>
-                        <input type="number" step="1" id="target_pct" value="100" required class="w-full text-sm font-medium text-slate-800 bg-white border border-slate-200 rounded-[6px] pl-3 pr-8 py-2.5 outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                        <span class="absolute right-3 top-[30px] text-sm text-slate-400 font-bold pointer-events-none group-focus-within:text-emerald-500 transition-colors">%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tombol Aksi Cerah -->
-            <div class="pt-3 animate-slide-up delay-500">
-                <button type="submit" class="w-full px-6 py-4 bg-emerald-500 text-sm text-white font-bold rounded-[10px] border-b-[4px] border-emerald-700 shadow-[0_6px_16px_rgba(16,185,129,0.25)] hover:bg-emerald-400 active:border-b-0 active:translate-y-[4px] transition-all flex items-center justify-center gap-2 group">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-pulse group-active:scale-90 transition-transform"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    HITUNG ESTIMASI WAKTU
-                </button>
-            </div>
-        </form>
-        
-        <!-- Hasil Kalkulasi Live (Warna Cerah) -->
-        <div id="liveResult" class="relative p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-[12px] shadow-[0_8px_24px_rgba(14,165,233,0.3)] hidden border border-sky-400 overflow-hidden">
-            <!-- Dekorasi background kilap -->
-            <div class="absolute top-0 right-0 -mt-16 -mr-16 w-48 h-48 bg-white rounded-full blur-[60px] opacity-20 pointer-events-none"></div>
-            
-            <div class="relative z-10">
-                <h3 class="text-[11px] text-sky-100 mb-2 uppercase tracking-[0.1em] font-bold flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
-                    Estimasi Selesai
-                </h3>
-                <div class="flex items-end gap-3 mt-1">
-                    <p class="text-4xl md:text-5xl font-bold tracking-tight text-white drop-shadow-md" id="resultTime">0j 0m</p>
-                    <p class="text-sm text-sky-100 pb-1.5 font-medium">hingga <span id="resultTargetPct" class="text-white font-bold">100</span>%</p>
-                </div>
-                
-                <div class="mt-5 pt-4 border-t border-sky-400/50 grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-[11px] text-sky-100 font-medium">Daya yang perlu diisi</p>
-                        <p class="text-sm font-bold mt-0.5 drop-shadow-sm"><span id="resultAh" class="text-white">0</span> Ah</p>
-                    </div>
-                    <div>
-                        <p class="text-[11px] text-sky-100 font-medium">Efisiensi sistem</p>
-                        <p class="text-sm font-bold mt-0.5 drop-shadow-sm"><span id="resultEff" class="text-white">85</span>%</p>
-                    </div>
-                    <!-- Muncul hanya jika input menggunakan Watt -->
-                    <div id="resultAmpWrapper" class="col-span-2 pt-2 hidden">
-                        <p class="text-[11px] text-sky-100 font-medium">Arus pengisian riil</p>
-                        <p class="text-sm font-bold mt-0.5 text-yellow-300 drop-shadow-sm"><span id="resultCalcAmp">0</span> Ampere <span class="text-[10px] text-sky-100 font-normal ml-1">Konversi otomatis dari Watt</span></p>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="relative flex-1 group">
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Saat Ini</label>
+                            <input type="number" step="1" id="current_pct" placeholder="20" required class="w-full text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-[8px] pl-3 pr-8 py-3 outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-50 transition-all">
+                            <span class="absolute right-3 top-[34px] text-sm text-slate-400 font-bold pointer-events-none">%</span>
+                        </div>
+                        <div class="pt-6 text-slate-300 font-bold">&rarr;</div>
+                        <div class="relative flex-1 group">
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1.5 ml-0.5 uppercase tracking-wider">Target</label>
+                            <input type="number" step="1" id="target_pct" value="100" required class="w-full text-sm font-bold text-slate-800 bg-white border border-slate-200 rounded-[8px] pl-3 pr-8 py-3 outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-50 transition-all">
+                            <span class="absolute right-3 top-[34px] text-sm text-slate-400 font-bold pointer-events-none">%</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-5 border-t border-sky-400/50">
-                    <button type="button" id="btnStartTimer" class="w-full px-4 py-3.5 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-[8px] transition-all flex items-center justify-center gap-2 backdrop-blur-sm border border-white/30 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:scale-110 transition-transform"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        Nyalakan Timer Alarm
+                <div class="pt-6">
+                    <button type="submit" class="w-full px-6 py-4 bg-emerald-500 text-sm text-white font-bold rounded-[10px] border-b-[4px] border-emerald-700 shadow-[0_6px_16px_rgba(16,185,129,0.25)] hover:bg-emerald-400 active:border-b-0 active:translate-y-[4px] transition-all flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        HITUNG ESTIMASI WAKTU
                     </button>
+                </div>
 
-                    <div id="countdownContainer" class="hidden flex-col items-center mt-1">
-                        <p class="text-[11px] text-sky-100 uppercase tracking-widest font-bold mb-1">Sisa Waktu Pengecasan</p>
-                        <p id="timerDisplay" class="text-4xl md:text-5xl font-mono font-bold tracking-tight text-yellow-300 drop-shadow-md">00:00:00</p>
+                <!-- Hasil Kalkulasi Live -->
+                <div id="liveResult" class="relative mt-8 p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-[12px] shadow-[0_8px_24px_rgba(14,165,233,0.3)] hidden overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-16 -mr-16 w-48 h-48 bg-white rounded-full blur-[60px] opacity-20 pointer-events-none"></div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-[11px] text-sky-100 mb-2 uppercase tracking-[0.1em] font-bold flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
+                            Estimasi Selesai
+                        </h3>
+                        <div class="flex items-end gap-3 mt-1">
+                            <p class="text-4xl md:text-5xl font-bold tracking-tight text-white drop-shadow-md" id="resultTime">0j 0m</p>
+                            <p class="text-sm text-sky-100 pb-1.5 font-medium">hingga <span id="resultTargetPct" class="text-white font-bold">100</span>%</p>
+                        </div>
                         
-                        <div class="w-full mt-5 flex gap-3">
-                            <button type="button" id="btnStopAlarm" class="hidden flex-1 px-4 py-3 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-[8px] transition-colors shadow-[0_0_15px_rgba(244,63,94,0.5)] animate-pulse uppercase tracking-wider">Matikan Suara</button>
-                            <button type="button" id="btnCancelTimer" class="flex-1 px-4 py-2.5 bg-sky-900/40 hover:bg-sky-900/60 text-sky-100 text-xs font-bold rounded-[8px] transition-colors border border-sky-400/30">Batalkan Timer</button>
+                        <div class="mt-5 pt-4 border-t border-sky-400/50 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-[11px] text-sky-100 font-medium">Daya yang perlu diisi</p>
+                                <p class="text-sm font-bold mt-0.5 drop-shadow-sm"><span id="resultAh" class="text-white">0</span> Ah</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-sky-100 font-medium">Efisiensi sistem</p>
+                                <p class="text-sm font-bold mt-0.5 drop-shadow-sm"><span id="resultEff" class="text-white">85</span>%</p>
+                            </div>
+                            <div id="resultAmpWrapper" class="col-span-2 pt-2 hidden">
+                                <p class="text-[11px] text-sky-100 font-medium">Arus pengisian riil</p>
+                                <p class="text-sm font-bold mt-0.5 text-yellow-300 drop-shadow-sm"><span id="resultCalcAmp">0</span> Ampere <span class="text-[10px] text-sky-100 font-normal ml-1">Konversi otomatis dari Watt</span></p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-5 border-t border-sky-400/50">
+                            <button type="button" id="btnStartTimer" class="w-full px-4 py-3.5 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-[8px] transition-all flex items-center justify-center gap-2 backdrop-blur-sm border border-white/30 group">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:scale-110 transition-transform"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Nyalakan Timer Alarm
+                            </button>
+
+                            <div id="countdownContainer" class="hidden flex-col items-center mt-1">
+                                <p class="text-[11px] text-sky-100 uppercase tracking-widest font-bold mb-1">Sisa Waktu Pengecasan</p>
+                                <p id="timerDisplay" class="text-4xl md:text-5xl font-mono font-bold tracking-tight text-yellow-300 drop-shadow-md">00:00:00</p>
+                                
+                                <div class="w-full mt-5 flex gap-3">
+                                    <button type="button" id="btnStopAlarm" class="hidden flex-1 px-4 py-3 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-[8px] transition-colors shadow-[0_0_15px_rgba(244,63,94,0.5)] animate-pulse uppercase tracking-wider">Matikan Suara</button>
+                                    <button type="button" id="btnCancelTimer" class="flex-1 px-4 py-2.5 bg-sky-900/40 hover:bg-sky-900/60 text-sky-100 text-xs font-bold rounded-[8px] transition-colors border border-sky-400/30">Batalkan Timer</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
-        <!-- Area tabel riwayat -->
-        <div class="bg-gradient-to-br from-white to-slate-50 rounded-[10px] shadow-[0_4px_12px_rgba(148,163,184,0.1)] border border-slate-100 overflow-hidden flex flex-col max-h-[500px] animate-slide-up delay-500 mt-8">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-white/50 backdrop-blur-sm">
-                <h2 class="text-xl text-slate-950 font-bold tracking-tight">Riwayat kalkulasi</h2>
-                <button type="button" onclick="clearLogs()" class="text-[11px] text-rose-500 hover:text-white font-bold px-3 py-1.5 rounded-[6px] hover:bg-rose-500 transition-all border border-rose-100 hover:border-rose-500">Hapus Semua</button>
-            </div>
-            
-            <div class="overflow-x-auto flex-1">
-                <table class="w-full text-left border-collapse">
-                    <thead class="sticky top-0 bg-slate-100/90 backdrop-blur-sm z-10 border-b border-slate-200">
-                        <tr>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider whitespace-nowrap">Waktu simpan</th>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider">Spesifikasi (Bat & Chg)</th>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider">Status (%)</th>
-                            <th class="px-4 py-3 text-[11px] text-slate-600 font-bold uppercase tracking-wider text-right">Estimasi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logTableBody" class="divide-y divide-slate-100">
-                        <!-- Data akan di-render di sini oleh JavaScript -->
-                    </tbody>
-                </table>
+        <!-- TAB RIWAYAT -->
+        <div id="tab-riwayat" class="tab-content hidden animate-slide-up">
+            <div class="bg-white rounded-[12px] shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[calc(100vh-180px)]">
+                <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
+                    <h2 class="text-base text-slate-950 font-bold tracking-tight">Riwayat Kalkulasi</h2>
+                    <button type="button" onclick="clearLogs()" class="text-[10px] text-rose-500 hover:text-white font-bold px-3 py-1.5 rounded-[6px] hover:bg-rose-500 transition-all border border-rose-100 uppercase tracking-wider">Hapus Semua</button>
+                </div>
+                
+                <div class="overflow-y-auto flex-1 bg-slate-50/30">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-0 bg-white z-10 shadow-sm">
+                            <tr>
+                                <th class="px-4 py-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider">Waktu</th>
+                                <th class="px-4 py-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider">Spesifikasi</th>
+                                <th class="px-4 py-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider text-right">Estimasi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logTableBody" class="divide-y divide-slate-100">
+                            <!-- Data akan di-render di sini oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
 
+    <!-- BOTTOM NAVIGATION (3 Tabs) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-slate-200 z-50 pb-safe">
+        <div class="max-w-md mx-auto flex justify-between items-end px-2 py-1">
+            <button type="button" onclick="switchTab('tab-data')" class="nav-btn text-sky-500 flex-1 flex flex-col items-center gap-1.5 py-2 hover:bg-slate-50 rounded-xl transition-all" data-target="tab-data">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>
+                <span class="text-[10px] font-bold">Data</span>
+            </button>
+            <button type="button" onclick="switchTab('tab-status')" class="nav-btn text-slate-400 flex-1 flex flex-col items-center gap-1.5 py-2 hover:bg-slate-50 rounded-xl transition-all relative" data-target="tab-status">
+                <div class="bg-emerald-50 text-emerald-500 w-12 h-12 flex items-center justify-center rounded-full -mt-6 shadow-sm border border-emerald-100 nav-icon-bg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                </div>
+                <span class="text-[10px] font-bold text-slate-400 nav-text-status">Hitung</span>
+            </button>
+            <button type="button" onclick="switchTab('tab-riwayat')" class="nav-btn text-slate-400 flex-1 flex flex-col items-center gap-1.5 py-2 hover:bg-slate-50 rounded-xl transition-all" data-target="tab-riwayat">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                <span class="text-[10px] font-bold">Riwayat</span>
+            </button>
+        </div>
     </div>
 
     <script>
         const STORAGE_KEY = 'ebike_charge_logs_v4';
+
+        function switchTab(tabId) {
+            // Sembunyikan semua tab
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden', 'animate-slide-up'));
+            // Tampilkan tab yang dipilih
+            const target = document.getElementById(tabId);
+            if(target) {
+                target.classList.remove('hidden');
+                void target.offsetWidth; // trigger reflow
+                target.classList.add('animate-slide-up');
+            }
+
+            // Update state Bottom Nav
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-sky-500', 'text-emerald-500', 'text-indigo-500');
+                btn.classList.add('text-slate-400');
+            });
+            document.querySelectorAll('.nav-text-status').forEach(el => {
+                el.classList.remove('text-emerald-500');
+                el.classList.add('text-slate-400');
+            });
+            document.querySelectorAll('.nav-icon-bg').forEach(el => {
+                el.classList.remove('bg-emerald-50', 'border-emerald-100', 'text-emerald-500');
+                el.classList.add('bg-white', 'border-slate-200', 'text-slate-400');
+            });
+
+            const activeBtn = document.querySelector(`.nav-btn[data-target="${tabId}"]`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                if(tabId === 'tab-data') activeBtn.classList.add('text-sky-500');
+                if(tabId === 'tab-status') {
+                    activeBtn.classList.add('text-emerald-500');
+                    
+                    const textEl = activeBtn.querySelector('.nav-text-status');
+                    if(textEl) {
+                        textEl.classList.remove('text-slate-400');
+                        textEl.classList.add('text-emerald-500');
+                    }
+
+                    const bgEl = activeBtn.querySelector('.nav-icon-bg');
+                    if(bgEl) {
+                        bgEl.classList.remove('bg-white', 'border-slate-200', 'text-slate-400');
+                        bgEl.classList.add('bg-emerald-50', 'border-emerald-100', 'text-emerald-500');
+                    }
+                }
+                if(tabId === 'tab-riwayat') activeBtn.classList.add('text-indigo-500');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function formatDate(isoString) {
             const date = new Date(isoString);
@@ -325,7 +386,6 @@
             return `${hours}j ${minutes}m`;
         }
 
-        // Menyimpan nilai spesifikasi ke draft
         function saveDraft() {
             const draft = {
                 bV: document.getElementById('bat_volt').value,
@@ -339,7 +399,6 @@
             localStorage.setItem('ebike_draft_v4', JSON.stringify(draft));
         }
 
-        // Memuat draft saat aplikasi dibuka
         function loadDraft() {
             const draftStr = localStorage.getItem('ebike_draft_v4');
             if (draftStr) {
@@ -359,7 +418,7 @@
             const tbody = document.getElementById('logTableBody');
             
             if (logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-16 text-center text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Belum ada data tersimpan</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="px-4 py-16 text-center text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Belum ada data tersimpan</td></tr>`;
                 return;
             }
 
@@ -371,16 +430,16 @@
                 }
 
                 html += `
-                    <tr class="hover:bg-slate-50 transition-colors group">
-                        <td class="px-4 py-3.5 text-sm text-slate-800 whitespace-nowrap">${formatDate(log.createdAt)}</td>
-                        <td class="px-4 py-3.5 text-sm text-slate-800">
+                    <tr class="hover:bg-slate-50 transition-colors group border-b border-slate-50">
+                        <td class="px-4 py-3 text-[11px] text-slate-500 font-medium whitespace-nowrap">
+                            ${formatDate(log.createdAt)}<br/>
+                            <span class="text-[10px] text-sky-500 font-bold">${log.currPct}% &rarr; ${log.targetPct}%</span>
+                        </td>
+                        <td class="px-4 py-3 text-[11px] text-slate-800">
                             <div class="font-bold">${log.bV}V / ${log.bAh}Ah</div>
-                            <div class="text-[11px] text-slate-500 font-medium mt-0.5">${log.cV}V / ${chgStr}</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">${log.cV}V / ${chgStr}</div>
                         </td>
-                        <td class="px-4 py-3.5 text-sm text-slate-800 font-bold">
-                            ${log.currPct}% <span class="text-slate-300 mx-0.5 font-normal">&rarr;</span> ${log.targetPct}%
-                        </td>
-                        <td class="px-4 py-3.5 text-sm text-sky-600 text-right font-bold">${formatTime(log.estTime)}</td>
+                        <td class="px-4 py-3 text-sm text-emerald-600 text-right font-bold">${formatTime(log.estTime)}</td>
                     </tr>
                 `;
             });
@@ -391,9 +450,6 @@
             if(confirm('Apakah kamu yakin ingin menghapus semua riwayat kalkulasi?')) {
                 localStorage.removeItem(STORAGE_KEY);
                 renderLogs();
-                const resultBox = document.getElementById('liveResult');
-                resultBox.classList.add('hidden');
-                resultBox.style.opacity = '0';
             }
         }
 
@@ -411,7 +467,6 @@
             let currPct = parseFloat(document.getElementById('current_pct').value);
             let targetPct = parseFloat(document.getElementById('target_pct').value);
 
-            // Validasi Logika Persentase
             if (targetPct > 100) targetPct = 100;
             if (currPct < 0) currPct = 0;
             if (currPct > targetPct) {
@@ -419,32 +474,26 @@
                 return;
             }
 
-            // Hitung Ampere murni jika input adalah Watt
             let chgAmp = chgPowerVal;
             if (chgPowerUnit === 'W') {
                 chgAmp = chgPowerVal / chgVolt;
             }
 
-            // Peringatan Keamanan Dasar
             if (chgAmp >= batAh && chgAmp > 5) {
                 if(!confirm(`⚠️ Peringatan: Arus charger terdeteksi sebesar ${chgAmp.toFixed(1)}A (Lebih besar/sama dengan kapasitas baterai ${batAh}Ah). \n\nIni sangat tidak umum untuk sepeda listrik standar dan bisa merusak baterai. Lanjutkan kalkulasi?`)) {
                     return;
                 }
             }
 
-            // Kalkulasi
             let estTimeHours = 0;
             const pctNeeded = (targetPct - currPct) / 100;
             const ahNeeded = batAh * pctNeeded;
             
-            // Efisiensi SLA (75%) vs Lithium (90%)
             const efficiency = (batType === 'sla') ? 75 : 90; 
             
-            if (chgRatio > 0) {
-                // CC Phase
+            if (chgAmp > 0) {
                 estTimeHours = (ahNeeded / chgAmp) * (100 / efficiency);
                 
-                // CV Phase (Penyerapan Melambat) untuk area > 80%
                 if (targetPct > 80) {
                     const cvPenalty = (batType === 'sla') ? 1.5 : 0.5;
                     let cvStartPct = Math.max(80, currPct);
@@ -457,14 +506,13 @@
                 }
             }
 
-            // Tampilkan UI Hasil dengan Animasi Halus
             const resultBox = document.getElementById('liveResult');
-            resultBox.classList.remove('hidden');
+            resultBox.classList.remove('hidden', 'animate-slide-up');
+            resultBox.style.opacity = '1';
             
             currentEstHours = estTimeHours;
             resetTimerUI();
 
-            // Trigger reflow untuk memastikan animasi berjalan ulang
             void resultBox.offsetWidth; 
             resultBox.classList.add('animate-slide-up');
             
@@ -473,7 +521,6 @@
             document.getElementById('resultAh').innerText = ahNeeded.toFixed(2);
             document.getElementById('resultEff').innerText = efficiency;
 
-            // Tampilkan Ampere konversi jika mode Watt
             const ampWrapper = document.getElementById('resultAmpWrapper');
             if (chgPowerUnit === 'W') {
                 ampWrapper.classList.remove('hidden');
@@ -482,7 +529,6 @@
                 ampWrapper.classList.add('hidden');
             }
 
-            // Simpan Log
             const newLog = {
                 id: Date.now(),
                 bV: batVolt,
@@ -506,17 +552,14 @@
             saveDraft();
             renderLogs();
             
-            // Efek auto-scroll smooth ke panel hasil
             setTimeout(() => {
-                resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
             }, 100);
             
-            // Reset state input persen awal
             document.getElementById('current_pct').value = '';
             document.getElementById('current_pct').focus();
         });
 
-        // --- LOGIKA TIMER & ALARM ---
         let timerInterval = null;
         let endTime = null;
         let currentEstHours = 0;
@@ -542,21 +585,18 @@
             if(isAlarmPlaying) return;
             isAlarmPlaying = true;
             
-            // Ubah UI untuk menampilkan peringatan
             btnStopAlarm.classList.remove('hidden');
             btnCancelTimer.classList.add('hidden');
             timerDisplay.classList.add('text-rose-400', 'animate-pulse');
             timerDisplay.classList.remove('text-yellow-300');
             timerDisplay.innerText = "SELESAI!";
 
-            // Menggunakan Tone.js untuk membangkitkan suara ala alarm digital
             await Tone.start();
             const synth = new Tone.Synth({
                 oscillator: { type: "square" },
                 envelope: { attack: 0.05, decay: 0.1, sustain: 0.3, release: 1 }
             }).toDestination();
 
-            // Pola bunyi beep-beep (C5 -> E5)
             alarmLoop = new Tone.Loop(time => {
                 synth.triggerAttackRelease("C5", "16n", time);
                 synth.triggerAttackRelease("C5", "16n", time + 0.15);
@@ -577,7 +617,6 @@
             btnCancelTimer.classList.remove('hidden');
             timerDisplay.classList.remove('text-rose-400', 'animate-pulse');
             timerDisplay.classList.add('text-yellow-300');
-            resetTimerUI();
         }
 
         function resetTimerUI() {
@@ -605,22 +644,18 @@
         }
 
         btnStartTimer.addEventListener('click', async () => {
-            // Browser mensyaratkan interaksi klik pengguna untuk mengizinkan Audio
             await Tone.start(); 
             
             btnStartTimer.classList.add('hidden');
             countdownContainer.classList.remove('hidden');
             countdownContainer.classList.add('flex');
             
-            // Konversi dari Jam (desimal) ke Milidetik
             const durationMs = currentEstHours * 3600 * 1000;
-            // Gunakan Date.now() agar waktu tetap jalan akurat walau layar HP mati/sleep
             endTime = Date.now() + durationMs;
             
-            updateTimer(); // Update detik pertama langsung
+            updateTimer();
             timerInterval = setInterval(updateTimer, 1000);
             
-            // Scroll sedikit agar timer terlihat penuh
             setTimeout(() => {
                 countdownContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
@@ -629,12 +664,18 @@
         btnCancelTimer.addEventListener('click', resetTimerUI);
         btnStopAlarm.addEventListener('click', stopAlarmSound);
 
-        // Membersihkan splash screen dari DOM setelah animasi selesai
         window.addEventListener('DOMContentLoaded', () => {
+            // Setup initial UI states
+            document.querySelectorAll('.nav-icon-bg').forEach(el => {
+                el.classList.add('bg-white', 'border-slate-200', 'text-slate-400');
+                el.classList.remove('bg-emerald-50', 'border-emerald-100', 'text-emerald-500');
+            });
+            // Aktifkan tab data sebagai default secara sinkron sebelum user melihat
+            switchTab('tab-data');
+
             loadDraft();
             renderLogs();
             
-            // Durasi disesuaikan dengan keyframe CSS (3.2s)
             setTimeout(() => {
                 const splash = document.getElementById('splashScreen');
                 if(splash) splash.style.display = 'none';
